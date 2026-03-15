@@ -35,6 +35,28 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
+  # Network
+  dio: ^5.9.0
+
+  # Permission
+  permission_handler: ^12.0.1
+
+  # DB
+  shared_preferences: ^2.3.3
+  path_provider: ^2.1.4
+  drift: ^2.14.1
+  sqlite3_flutter_libs: ^0.5.18
+  path: ^1.8.3
+
+  # Riverpod
+  flutter_riverpod: ^3.0.3
+
+  # Routing
+  go_router: ^14.2.7
+
+  # Collection
+  collection: ^1.19.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -45,6 +67,10 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+
+  # TEST DB
+  drift_dev: ^2.14.1
+  build_runner: ^2.4.7
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
