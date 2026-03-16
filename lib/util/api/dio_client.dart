@@ -11,7 +11,7 @@ import 'package:flutter/foundation.dart';
 
 String dioJWT = '';
 String dioAuthHeader = 'Bearer';
-final bool isLogging = false;
+final bool isLogging = true;
 final bool isDebug = kDebugMode;
 // final bool isDebug = true;
 
@@ -188,16 +188,16 @@ class PalloInterceptors extends Interceptor {
     final url = _parseUri(options.uri);
 
     if (isLogging && isDebug) {
-      pLog.tags(tags).xd("🚀 ——→ $_endSeparator");
-      pLog.tags(tags).xd('🚀 [URL] - [${options.method}] $url');
-      pLog.tags(tags).xd('🚀 [HEADERS] - ${options.headers.toPrettyString()}');
+      pLog.tags(tags).xd("┌ 🚀 ——→ $_endSeparator");
+      pLog.tags(tags).xd('│ 🚀 [URL] - [${options.method}] $url');
+      pLog.tags(tags).xd('│ 🚀 [HEADERS] - ${options.headers.toPrettyString(withBoxSeparator: false)}');
       final data = options.data;
       if (data is Map<String, dynamic>) {
-        pLog.tags(tags).xd('🚀 [BODY] - ${data.toPrettyString()}');
+        pLog.tags(tags).xd('│ 🚀 [BODY] - ${data.toPrettyString(withBoxSeparator: false)}');
       } else {
-        pLog.tags(tags).xd('🚀 [BODY] - $data');
+        pLog.tags(tags).xd('│ 🚀 [BODY] - $data');
       }
-      pLog.tags(tags).xd('🚀 ——→  $_endSeparator');
+      pLog.tags(tags).xd('└ 🚀 ——→  $_endSeparator');
     }
 
     return super.onRequest(options, handler);
@@ -210,25 +210,25 @@ class PalloInterceptors extends Interceptor {
     List<Tag> tags = [Tag.API, Tag.RESPONSE];
 
     if (isLogging && isDebug) {
-      pLog.tags(tags).xd("$emoji ←—— $_endSeparator");
+      pLog.tags(tags).xd("┌ $emoji ←—— $_endSeparator");
       pLog
           .tags(tags)
           .xd(
-            '$emoji [URL] - [${response.requestOptions.method}] ${_parseUri(response.requestOptions.uri)}',
+            '│ $emoji [URL] - [${response.requestOptions.method}] ${_parseUri(response.requestOptions.uri)}',
           );
       pLog
           .tags(tags)
           .xd(
-            '$emoji [HEADERS] - ${response.requestOptions.headers.toPrettyString()}',
+            '│ $emoji [HEADERS] - ${response.requestOptions.headers.toPrettyString(withBoxSeparator: false)}',
           );
-      pLog.tags(tags).xd('$emoji [CODE] - ${response.statusCode}');
+      pLog.tags(tags).xd('│ $emoji [CODE] - ${response.statusCode}');
       final responseData = response.data;
       if (responseData is Map<String, dynamic>) {
-        pLog.tags(tags).xd('$emoji [BODY] - ${responseData.toPrettyString()}');
+        pLog.tags(tags).xd('│ $emoji [BODY] - ${responseData.toPrettyString(withBoxSeparator: false)}');
       } else {
-        pLog.tags(tags).xd('$emoji [BODY] - $responseData');
+        pLog.tags(tags).xd('│ $emoji [BODY] - $responseData');
       }
-      pLog.tags(tags).xd('$emoji  ←—— $_endSeparator');
+      pLog.tags(tags).xd('└ $emoji  ←—— $_endSeparator');
     }
 
     switch (loadingType) {
@@ -301,30 +301,27 @@ class PalloInterceptors extends Interceptor {
 
     if (isLogging && isDebug) {
       const List<Tag> tags = [Tag.API, Tag.ERROR];
-      pLog.tags(tags).xe("❌ ←—— $_endSeparator");
+      pLog.tags(tags).xe("┌ ❌ ←—— $_endSeparator");
       pLog
           .tags(tags)
           .xe(
-            '❌ [URL] - [${err.requestOptions.method}] ${_parseUri(err.requestOptions.uri)}',
+            '│ ❌ [URL] - [${err.requestOptions.method}] ${_parseUri(err.requestOptions.uri)}',
           );
       pLog
           .tags(tags)
-          .xe('❌ [HEADERS] - ${err.requestOptions.headers.toPrettyString()}');
-      pLog.tags(tags).xe('❌ [ERROR] - ${err.error}');
+          .xe('│ ❌ [HEADERS] - ${err.requestOptions.headers.toPrettyString(withBoxSeparator: false)}');
+      pLog.tags(tags).xe('│ ❌ [ERROR] - ${err.error}');
 
       if (err.response != null) {
-        pLog.tags(tags).xe('❌ [STATUS] - ${err.response?.statusCode}');
+        pLog.tags(tags).xe('│ ❌ [STATUS] - ${err.response?.statusCode}');
         final responseData = err.response?.data;
         if (responseData is Map<String, dynamic>) {
-          pLog.tags(tags).xe('❌ [BODY] - ${responseData.toPrettyString()}');
+          pLog.tags(tags).xe('│ ❌ [BODY] - ${responseData.toPrettyString(withBoxSeparator: false)}');
         } else {
-          pLog.tags(tags).xe('❌ [BODY] - $responseData');
+          pLog.tags(tags).xe('│ ❌ [BODY] - $responseData');
         }
-      } else {
-        // TODO: - 서버에서 응답이 없는 경우 어떻게 처리할 지 정하기
-        // TODO: - ex) 인터넷 연결 안된경우 or 서버에 도달 못한 경우 등에 대해 어떻게 처리할지 등
-      }
-      pLog.tags(tags).xe('❌$_endSeparator');
+      } 
+      pLog.tags(tags).xe('└ ❌$_endSeparator');
     }
 
     String errorMessage = StringKey.alertServerError.value;
@@ -350,12 +347,13 @@ class PalloInterceptors extends Interceptor {
   }
 
   String _parseUri(Uri? uri) {
-    final baseUrl = BASE_URL;
-    // final baseUrl = '';
     if (uri == null) {
       return 'NULL';
     }
-    return uri.toString().replaceAll(baseUrl, '');
+    final path = uri.path.isEmpty ? '/' : uri.path;
+    final queryPart =
+        uri.query.isNotEmpty ? '?${uri.query}' : '';
+    return path + queryPart;
   }
 }
 
@@ -371,6 +369,10 @@ class ApiConstants {
 
 String get BASE_URL {
   // return apiUrl;
+  // Android 에뮬레이터/기기: localhost는 기기 자신을 가리킴 → 호스트 PC는 10.0.2.2
+  if (Platform.isAndroid) {
+    return "http://10.0.2.2:8000";
+  }
   return "http://localhost:8000";
   // return "http://pi-test.tgclab.com";
 }

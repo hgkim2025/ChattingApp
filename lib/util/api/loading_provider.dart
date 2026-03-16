@@ -1,3 +1,4 @@
+import 'package:chattingapp/util/api/api_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod/riverpod.dart' show ProviderContainer;
 
@@ -103,6 +104,6 @@ void decrementLoadingCountLocal() {
 
 void logout() {
   if (_globalContainer != null) {
-    // _globalContainer!.read(loginProvider.notifier).logout();
+    _globalContainer!.read(apiNotifier.notifier).logout();
   }
 }
