@@ -30,9 +30,11 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      id: json['id'] as int,
-    );
+    final idRaw = json['id'];
+    final id = idRaw is int
+        ? idRaw
+        : (int.tryParse(idRaw?.toString() ?? '') ?? 0);
+    return User(id: id);
   }
 
   Map<String, dynamic> toJson() {

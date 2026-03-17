@@ -5,7 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  runApp(const ProviderScope(child: MyApp()));
+  final container = ProviderContainer();
+
+  // 전역 ProviderContainer 설정 (DioClient interceptor에서 사용)
+  setGlobalProviderContainer(container);
+
+  // 위젯 트리도 같은 container 사용 → AppDatabase가 한 번만 생성됨 (Drift 경고 해소)
+  runApp(UncontrolledProviderScope(container: container, child: const MyApp()));
 }
 
   class MyApp extends ConsumerWidget {

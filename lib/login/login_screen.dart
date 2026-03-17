@@ -1,4 +1,8 @@
 import 'package:chattingapp/util/api/api_notifier.dart';
+import 'package:chattingapp/util/api/loading_provider.dart';
+import 'package:chattingapp/util/db/db_provider.dart';
+import 'package:chattingapp/util/log.dart';
+import 'package:chattingapp/util/route/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,6 +18,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _pwController = TextEditingController(text: '1234');
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final userDao = getGlobalProviderContainer()?.read(userDaoProvider);
+      final user = await userDao?.getLoggedInUser();
+      if (user?.accessToken != null) {
+        ref.read(routerProvider).go(AppRoute.room.path);
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _idController.dispose();
     _pwController.dispose();
@@ -23,9 +39,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
+      appBar: AppBar(title: const Text('Login')),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

@@ -205,7 +205,7 @@ class PalloInterceptors extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    final failed = response.statusCode != HttpStatus.ok;
+    final failed = response.statusCode != HttpStatus.ok && response.statusCode != HttpStatus.created;
     final emoji = failed ? '❌' : '✅';
     List<Tag> tags = [Tag.API, Tag.RESPONSE];
 
@@ -272,7 +272,7 @@ class PalloInterceptors extends Interceptor {
         data: {'refresh': refreshToken},
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == HttpStatus.ok || response.statusCode == HttpStatus.created) {
         final data = response.data;
         if (data is Map<String, dynamic> && data.containsKey('access')) {
           dioJWT = data['access'];
@@ -362,9 +362,15 @@ class ApiConstants {
   static final ApiConstants to = ApiConstants._();
   ApiConstants._();
 
+  // Auth
   String signupUrl = '${BASE_URL}/api/signup/';
   String loginUrl = '${BASE_URL}/api/login/';
   String refreshTokenUrl = '${BASE_URL}/api/token/refresh/';
+
+  // Room
+  String roomUrl = '${BASE_URL}/api/rooms/';
+
+
 }
 
 String get BASE_URL {
