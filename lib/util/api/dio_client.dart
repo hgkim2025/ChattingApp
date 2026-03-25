@@ -369,6 +369,8 @@ class ApiConstants {
 
   // Room
   String roomUrl = '${BASE_URL}/api/rooms/';
+  String roomSearchUrl = '${BASE_URL}/api/rooms/search/';
+  String roomJoinUrl = '${BASE_URL}/api/rooms/join/';
 
 
 }
